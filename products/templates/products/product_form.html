@@ -1,0 +1,6 @@
+<h2>{{ object.title }}</h2>
+<p>{{ object.description }}</p>
+<p>Price: ${{ object.price }}</p>
+<img src="{{ object.image.url }}" alt="{{ object.title }}" />
+<a href="{% url 'product-update' object.pk %}">Update</a>
+<a href="{% url 'product-delete' object.pk %}">Delete</a>

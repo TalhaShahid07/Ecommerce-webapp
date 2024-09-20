@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout</title>
+</head>
+<body>
+    <h2>Checkout</h2>
+    <form method="post">
+        {% csrf_token %}
+        <h3>Your Cart</h3>
+        <ul>
+            {% for item in items %}
+                <li>
+                    {{ item.product.title }} - {{ item.quantity }} x ${{ item.product.price }} = ${{ item.total_price }}
+                </li>
+            {% endfor %}
+        </ul>
+        <p>Total: ${{ total }}</p>
+        <button type="submit">Complete Order</button>
+    </form>
+</body>
+</html>
