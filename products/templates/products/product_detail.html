@@ -7,63 +7,120 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            background-color: #f7f7f7;
             margin: 0;
             padding: 0;
         }
         .container {
-            width: 80%;
+            width: 85%;
             margin: 20px auto;
             padding: 20px;
             background-color: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
         }
         h2 {
-            color: #333;
+            color: #2c3e50;
             margin-bottom: 10px;
         }
         p {
-            color: #555;
+            color: #7f8c8d;
             font-size: 1.1em;
             line-height: 1.6;
         }
         .price {
-            font-size: 1.2em;
+            font-size: 1.3em;
             color: #e74c3c;
             font-weight: bold;
         }
         .product-image {
             max-width: 100%;
             height: auto;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
             margin: 20px 0;
+        }
+        .product-availability {
+            font-size: 1.2em;
+            color: #27ae60;
+            font-weight: bold;
+        }
+        .rating {
+            color: #f39c12;
+            font-size: 1.2em;
         }
         .actions {
             margin-top: 20px;
         }
         .actions a {
             display: inline-block;
-            padding: 10px 20px;
-            margin: 0 5px;
+            padding: 12px 25px;
+            margin: 0 8px;
             text-decoration: none;
-            border-radius: 5px;
-            transition: background-color 0.3s, color 0.3s;
-            color: #fff;
+            border-radius: 6px;
+            transition: background-color 0.3s ease;
             font-weight: bold;
+            color: #fff;
         }
-        .actions .update {
-            background-color: #3498db;
+        .actions .add-to-cart {
+            background-color: #2ecc71;
         }
-        .actions .update:hover {
+        .actions .add-to-cart:hover {
+            background-color: #27ae60;
+        }
+        .actions .add-to-wishlist {
+            background-color: #9b59b6;
+        }
+        .actions .add-to-wishlist:hover {
+            background-color: #8e44ad;
+        }
+        .actions .update, .actions .delete {
             background-color: #2980b9;
+            display: none;  /* Hide by default for non-admins */
         }
         .actions .delete {
             background-color: #e74c3c;
         }
+        .actions .update:hover {
+            background-color: #3498db;
+        }
         .actions .delete:hover {
             background-color: #c0392b;
+        }
+        /* Show admin controls if user is a superuser */
+        {% if user.is_authenticated and user.is_superuser %}
+            .actions .update, .actions .delete {
+                display: inline-block;
+            }
+        {% endif %}
+        /* Style reviews and related products */
+        .reviews {
+            margin-top: 30px;
+        }
+        .review-item {
+            border-bottom: 1px solid #ddd;
+            padding: 10px 0;
+        }
+        .related-products {
+            margin-top: 40px;
+            padding: 20px;
+            background-color: #ecf0f1;
+            border-radius: 8px;
+        }
+        .related-products h3 {
+            color: #34495e;
+        }
+        .related-product-item {
+            display: inline-block;
+            width: 30%;
+            margin: 10px 1%;
+            text-align: center;
+        }
+        .related-product-item img {
+            width: 100%;
+            height: auto;
+            border-radius: 6px;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
         }
     </style>
 </head>
@@ -72,12 +129,47 @@
         <h2>{{ object.title }}</h2>
         <p>{{ object.description }}</p>
         <p class="price">Price: ${{ object.price }}</p>
+        <p class="product-availability">Availability: In Stock</p>
+        <p class="rating">Rating: ★★★★☆ (4.2/5)</p>
         <img src="{{ object.image.url }}" alt="{{ object.title }}" class="product-image"/>
+        
         <div class="actions">
+            <a href="#" class="add-to-cart">Add to Cart</a>
+            <a href="#" class="add-to-wishlist">Add to Wishlist</a>
             {% if user.is_authenticated and user.is_superuser %}
                 <a href="{% url 'product-update' object.pk %}" class="update">Update</a>
                 <a href="{% url 'product-delete' object.pk %}" class="delete">Delete</a>
             {% endif %}
+        </div>
+
+        <div class="reviews">
+            <h3>Customer Reviews</h3>
+            <div class="review-item">
+                <p><strong>John Doe</strong></p>
+                <p>"Great product! Totally worth it."</p>
+                <p>Rating: ★★★★★</p>
+            </div>
+            <div class="review-item">
+                <p><strong>Jane Smith</strong></p>
+                <p>"Good value for money, but delivery was slow."</p>
+                <p>Rating: ★★★★☆</p>
+            </div>
+        </div>
+
+        <div class="related-products">
+            <h3>You May Also Like</h3>
+            <div class="related-product-item">
+                <img src="/path/to/related-product-1.jpg" alt="Related Product 1">
+                <p>Related Product 1</p>
+            </div>
+            <div class="related-product-item">
+                <img src="/path/to/related-product-2.jpg" alt="Related Product 2">
+                <p>Related Product 2</p>
+            </div>
+            <div class="related-product-item">
+                <img src="/path/to/related-product-3.jpg" alt="Related Product 3">
+                <p>Related Product 3</p>
+            </div>
         </div>
     </div>
 </body>

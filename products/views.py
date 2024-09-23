@@ -66,3 +66,20 @@ class ProductDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
     def test_func(self):
         return self.request.user.is_superuser
+from django.shortcuts import get_object_or_404, redirect
+from .models import Product, Review
+from .forms import ReviewForm
+
+def add_review(request, pk):
+    product = get_object_or_404(Product, pk=pk)
+    if request.method == "POST":
+        form = ReviewForm(request.POST)
+        if form.is_valid():
+            review = form.save(commit=False)
+            review.product = product
+            review.user = request.user
+            review.save()
+            return redirect('product-detail', pk=pk)
+    else:
+        form = ReviewForm()
+    return render(request, 'products/add_review.html', {'form': form, 'product': product})
