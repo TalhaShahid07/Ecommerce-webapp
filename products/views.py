@@ -8,7 +8,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 class ProductListView(LoginRequiredMixin, ListView):
     model = Product
     template_name = 'products/product_list.html'
-    context_object_name = 'page_obj'  # Use 'page_obj' for pagination
+    context_object_name = 'products'  # Refers to the object in the template
+    paginate_by = 10  # Show 10 products per page
 
     def get_queryset(self):
         query = self.request.GET.get('q')
@@ -18,6 +19,7 @@ class ProductListView(LoginRequiredMixin, ListView):
 
         products = Product.objects.all()
 
+        # Apply filters based on query parameters
         if query:
             products = products.filter(title__icontains=query)
         if category:
